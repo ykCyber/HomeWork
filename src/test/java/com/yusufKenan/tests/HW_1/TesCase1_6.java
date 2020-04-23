@@ -1,4 +1,4 @@
-package com.yusufKenan.tests.homeWork1;
+package com.yusufKenan.tests.HW_1;
 
 import com.github.javafaker.Faker;
 import com.yusufKenan.utilities.WebDriverFactory;
@@ -14,12 +14,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class HomeWork1 {
-    WebDriver driver = WebDriverFactory.getDriver("chrome");
+public class TesCase1_6 {
     public Random rnd = new Random();
-
+    String actualResult = "";
+    String expectedlResult = "";
+    WebDriver driver;
     @BeforeSuite(alwaysRun = true)
     public void setupSuite() {
+        driver = WebDriverFactory.getDriver("chrome");
 
     }
 
@@ -34,17 +36,15 @@ public class HomeWork1 {
     beforeClass() {
 
         System.out.println("Before class");
-//        driver.manage().window().maximize();
+        driver.manage().window().maximize();
     }
 
-    @BeforeTest
+    /*@BeforeTest
     public void before() {
         driver.get("https://practice-cybertekschool.herokuapp.com/");
         driver.findElement(By.linkText("Registration Form")).click();
 
-    }
-
-
+    }*/
 
 
     @Test
@@ -89,7 +89,9 @@ public class HomeWork1 {
 
         char c = ((char) (rnd.nextInt(26) + 'a'));
         WebElement element = driver.findElement(By.name("firstname"));
+        element.isDisplayed();
         element.sendKeys(Character.toString(c));
+
         String actual = driver.findElement(By.xpath("//small[contains(.,'first name must be more than 2 and less than 64 characters long')]")).getText();
         String expexted = "first name must be more than 2 and less than 64 characters long";
         Assert.assertEquals(actual, expexted, "Verify invalid last name input");
@@ -149,11 +151,9 @@ public class HomeWork1 {
 
 
 
-
     @AfterClass
     public void
     afterClass() {
-        System.out.println("after class");
         driver.quit();
     }
 }
