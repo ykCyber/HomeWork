@@ -19,9 +19,9 @@ public class TesCase1_6 {
     String actualResult = "";
     String expectedlResult = "";
     WebDriver driver;
+
     @BeforeSuite(alwaysRun = true)
     public void setupSuite() {
-        driver = WebDriverFactory.getDriver("chrome");
 
     }
 
@@ -36,22 +36,13 @@ public class TesCase1_6 {
     beforeClass() {
 
         System.out.println("Before class");
-        driver.manage().window().maximize();
+        driver = WebDriverFactory.getDriver("chrome");
+
     }
 
-    /*@BeforeTest
-    public void before() {
-        driver.get("https://practice-cybertekschool.herokuapp.com/");
-        driver.findElement(By.linkText("Registration Form")).click();
-
-    }*/
-
-
     @Test
-    public void testCase1() {
-        //DOB not valid
-
-
+    public void testCase01() {
+        driver.get("https://practice-cybertekschool.herokuapp.com/registration_form");
         WebElement element = driver.findElement(By.xpath("//small[contains(.,'The date of birth is not valid')]"));
         driver.findElement(By.name("birthday")).sendKeys("12*12*1212");
         String actual = element.getText();
@@ -60,9 +51,8 @@ public class TesCase1_6 {
     }
 
     @Test
-    public void testcase2() {
+    public void testcase02() {
         // verify c++, java, displayed
-
         List<WebElement> actualList = driver.findElements(By.className("form-check-inline"));
 
         String[] expected = new String[]{"c++", "java", "JavaScript"};
@@ -79,18 +69,24 @@ public class TesCase1_6 {
     @AfterMethod
     public void after() throws InterruptedException {
         Thread.sleep(5000);
-        System.out.println("bitti kapayıyorum");
+        System.out.println("end of test");
 
     }
 
     @Test
-    public void testcase3() {
+    public void testcase03() {
         //name invalid data
-
+        driver.get("https://practice-cybertekschool.herokuapp.com/registration_form");
+        WebElement element1 = driver.findElement(By.xpath("(//i[@data-bv-icon-for])[1]"));
+        System.out.println("element.isDisplayed() = " + element1.isDisplayed());
+        System.out.println("element1 = " + element1.getAttribute("class"));
+        WebElement element2 = driver.findElement(By.name("firstname"));
         char c = ((char) (rnd.nextInt(26) + 'a'));
-        WebElement element = driver.findElement(By.name("firstname"));
-        element.isDisplayed();
-        element.sendKeys(Character.toString(c));
+        element2.sendKeys(Character.toString(c));
+        element2.sendKeys(Character.toString(c));
+        System.out.println("element1.isDisplayed() = " + element2.isDisplayed());
+        System.out.println("element1 = " + element1.getAttribute("class"));
+
 
         String actual = driver.findElement(By.xpath("//small[contains(.,'first name must be more than 2 and less than 64 characters long')]")).getText();
         String expexted = "first name must be more than 2 and less than 64 characters long";
@@ -98,7 +94,7 @@ public class TesCase1_6 {
     }
 
     @Test
-    public void testCase4() {
+    public void testCase04() {
         //last name invalid data
 
         char c = ((char) (rnd.nextInt(26) + 'a'));
@@ -109,11 +105,10 @@ public class TesCase1_6 {
     }
 
     @Test
-    public void testCase5() throws InterruptedException {
+    public void testCase05() throws InterruptedException {
         //fill the form
         driver.get("https://practice-cybertekschool.herokuapp.com/");
         driver.findElement(By.linkText("Registration Form")).click();
-        char c = ((char) (rnd.nextInt(26) + 'a'));
         Faker jf = new Faker();
         String firstName = jf.name().firstName();
         String lastName = jf.name().lastName();
@@ -137,23 +132,68 @@ public class TesCase1_6 {
         element = driver.findElement(By.name("department"));
         Select select = new Select(element);
         select.selectByIndex(3);
+        System.out.println("driver.findElement(By.xpath(\"(//i[@style])[8]\")).isDisplayed() = " + driver.findElement(By.xpath("(//i[@style])[8]")).isDisplayed());
+        System.out.println("driver.findElement(By.xpath(\"(//i[@style])[8]\")).getText() = " + driver.findElement(By.xpath("(//i[@style])[8]")).getText());
         element = driver.findElement(By.name("job_title"));
         select = new Select(element);
         select.selectByIndex(3);
+        Thread.sleep(3000);
         driver.findElement(By.id("inlineCheckbox2")).click();
+        List<WebElement> element1 = driver.findElements(By.xpath("//i[@data-bv-icon-for]"));
+            int i = 0;
+        for (WebElement elementa : element1) {
+            i++;
+            actualResult = elementa.getAttribute("class");
+            System.out.println("actualResult = " + actualResult);
+            expectedlResult = "form-control-feedback glyphicon glyphicon-ok";
+            System.out.println(elementa.getText());
+            Assert.assertEquals(actualResult, expectedlResult,i+".verify OK tickMArk");
+        }
+
         driver.findElement(By.id("wooden_spoon")).click();
         Thread.sleep(3000);
         String actual = driver.findElement(By.xpath("//p")).getText();
         Assert.assertEquals(actual, "You've successfully completed registration!");
-
-
     }
-
-
 
     @AfterClass
     public void
-    afterClass() {
-        driver.quit();
+   afterClass() {
+   //     driver.quit();
+    }
+
+    @Test
+    public void testCase06() throws InterruptedException {
+        driver.get("https://www.fakemail.net/");
+        Faker jf = new Faker();
+
+        WebElement email = driver.findElement(By.xpath("//span[@id='email']"));
+        String emailData = email.getText();
+        System.out.println(driver.findElement(By.xpath("//span[@id='email']")).getText());
+        driver.navigate().to("https://practice-cybertekschool.herokuapp.com/");
+        driver.findElement(By.xpath("//a[@href='/sign_up']")).click();
+        driver.findElement(By.name("full_name")).sendKeys(jf.name().fullName());
+        driver.findElement(By.name("email")).sendKeys(emailData);
+        driver.findElement(By.name("wooden_spoon")).click();
+        Thread.sleep(2000);
+        String actualResult = driver.findElement(By.name("signup_message")).getText();
+        Assert.assertTrue(driver.findElement(By.name("signup_message")).isDisplayed());
+        String expectedResult = "Thank you for signing up. Click the button below to return to the home page.";
+        Assert.assertEquals(actualResult, expectedResult, "Verify signup OK");
+        driver.navigate().to("https://www.fakemail.net/");
+        Thread.sleep(5000);
+        driver.findElement(By.xpath("//td[contains(.,' do-not-reply@practice.cybertekschool.com')]")).click();
+        actualResult = driver.findElement(By.id("odesilatel")).getText();
+        expectedResult = "do-not-reply@practice.cybertekschool.com";
+        Assert.assertEquals(actualResult, expectedResult);
+        actualResult = driver.findElement(By.id("predmet")).getText();
+        expectedResult = "Thanks for subscribing to practice.cybertekschool.com!";
+
+        Assert.assertEquals(actualResult, expectedResult);
+        //Step 9. Navigate back to the “https://www.tempmailaddress.com/
+        // ”Step 10. Verify that you’ve received an email from “do-not-reply@practice.cybertekschool.com”
+        // Step 11. Click on that email to open it.
+        // Step 12. Verify that email is from: “do-not-reply@practice.cybertekschool.com”Step
+        // 13. Verify that subtject is: “Thanks for subscribing to practice.cybertekschool.com!”
     }
 }
