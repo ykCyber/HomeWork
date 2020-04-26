@@ -78,23 +78,22 @@ public class TestCase7_12 {
 
     }
 
-    @Test
-    public void testCase007() throws InterruptedException {
-        driver.get("https://practice-cybertekschool.herokuapp.com/upload");
-        WebElement uploadElement = driver.findElement(By.id("file-upload"));
-        // enter the file path onto the file-selection input field
-        uploadElement.sendKeys("C:\\Users\\mksimsir\\Desktop\\asd.txt");
-        Thread.sleep(2000);
-        driver.findElement(By.id("file-submit")).click();
-        Thread.sleep(2000);
-        actualResult = driver.findElement(By.id("uploaded-files")).getText();
-        expectedResult = "asd.txt";
-        Assert.assertEquals(actualResult, expectedResult, "Uploaded file name displayed");
-//        driver.findElement(By.id("uploaded-files")).click();
-//        Thread.sleep(2000);
-//        driver.findElement(By.id("uploaded-files")).click();
+        @Test
+        public void testCase007() throws InterruptedException {
+            driver.get("https://practice-cybertekschool.herokuapp.com/upload");
+            WebElement uploadElement = driver.findElement(By.id("file-upload"));
+            // enter the file path onto the file-selection input field
 
-    }
+            uploadElement.sendKeys("C:\\Intel\\Logs\\IntelCPHS.log");
+
+            Thread.sleep(2000);
+            driver.findElement(By.id("file-submit")).click();
+            Thread.sleep(2000);
+            actualResult = driver.findElement(By.id("uploaded-files")).getText();
+            expectedResult = "IntelCPHS.log";
+
+            Assert.assertEquals(actualResult, expectedResult, "Uploaded file name displayed");
+        }
 
     @Test
 
